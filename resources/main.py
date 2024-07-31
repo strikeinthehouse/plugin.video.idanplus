@@ -21,9 +21,9 @@ if not os.path.isfile(favoritesFile):
 
 
 def GetCategoriesList():
-    name = common.GetLabelColor("Favoritos de TV Digital", bold=True, color="none")
+    name = common.GetLabelColor("Favoritos do Iday Plus", bold=True, color="none")
     common.addDir(name, '', 10, icon, infos={"Title": name}, addFav=False)
-    name = common.GetLabelColor("Pesquisar Programas", bold=True, color="none")
+    name = common.GetLabelColor("Buscar Programas", bold=True, color="none")
     common.addDir(name, '', 4, icon, infos={"Title": name}, addFav=False)
     name = common.GetLabelColor("Televisão", bold=True, color="none")
     common.addDir(name, '', 1, icon, infos={"Title": name})
@@ -122,55 +122,67 @@ def VODs():
     name = common.GetLabelColor(common.GetLocaleString(30604), bold=True, color="none")
     common.addDir(name, '', -1, common.GetIconFullPath("13.jpg"), infos={"Title": name}, module='reshet')
     name = common.GetLabelColor(common.GetLocaleString(30606), bold=True, color="none")
-    common.addDir(name, '', -1, common.GetIconFullPath("zohar.jpg"), infos={"Title": name}, module='zohar')
+    common.addDir(name, '', -1, common.GetIconFullPath("channel.png"), infos={"Title": name}, module='id')
     name = common.GetLabelColor(common.GetLocaleString(30607), bold=True, color="none")
-    common.addDir(name, '', 0, common.GetIconFullPath("otv.png"), infos={"Title": name}, module='otv')
+    common.addDir(name, '', -1, common.GetIconFullPath("trump.jpg"), infos={"Title": name}, module='mako')
 
 def RadioChannels():
+    name = common.GetLabelColor(common.GetLocaleString(30608), bold=True, color="none")
+    common.addDir(name, '', 0, common.GetIconFullPath("98fm.jpg"), infos={"Title": name}, module='98fm')
+    name = common.GetLabelColor(common.GetLocaleString(30609), bold=True, color="none")
+    common.addDir(name, '', 0, common.GetIconFullPath("radio7.jpg"), infos={"Title": name}, module='radio7')
+    name = common.GetLabelColor(common.GetLocaleString(30610), bold=True, color="none")
+    common.addDir(name, '', 0, common.GetIconFullPath("galei.jpg"), infos={"Title": name}, module='galei')
+    name = common.GetLabelColor(common.GetLocaleString(30611), bold=True, color="none")
+    common.addDir(name, '', 0, common.GetIconFullPath("radio1.jpg"), infos={"Title": name}, module='radio1')
     name = common.GetLabelColor(common.GetLocaleString(30612), bold=True, color="none")
-    common.addDir(name, '', 0, common.GetIconFullPath("radio.png"), infos={"Title": name})
+    common.addDir(name, '', 0, common.GetIconFullPath("kan.jpg"), infos={"Title": name}, module='kan')
 
-def Podcasts():
-    name = common.GetLabelColor(common.GetLocaleString(30613), bold=True, color="none")
-    common.addDir(name, '', 0, common.GetIconFullPath("podcast.png"), infos={"Title": name})
+def EPGs():
+    if common.GetAddonSetting("epgChannelFormat") == '1':
+        name = common.GetLabelColor(common.GetLocaleString(30613), bold=True, color="none")
+        common.addDir(name, '', 0, common.GetIconFullPath("kan.jpg"), infos={"Title": name}, module='kan')
+    if common.GetAddonSetting("epgChannelFormat") == '2':
+        name = common.GetLabelColor(common.GetLocaleString(30614), bold=True, color="none")
+        common.addDir(name, '', 0, common.GetIconFullPath("mako.png"), infos={"Title": name}, module='keshet')
+    if common.GetAddonSetting("epgChannelFormat") == '3':
+        name = common.GetLabelColor(common.GetLocaleString(30615), bold=True, color="none")
+        common.addDir(name, '', -1, common.GetIconFullPath("13.jpg"), infos={"Title": name}, module='reshet')
+    if common.GetAddonSetting("epgChannelFormat") == '4':
+        name = common.GetLabelColor(common.GetLocaleString(30616), bold=True, color="none")
+        common.addDir(name, '', -1, common.GetIconFullPath("channel.png"), infos={"Title": name}, module='id')
+    if common.GetAddonSetting("epgChannelFormat") == '5':
+        name = common.GetLabelColor(common.GetLocaleString(30617), bold=True, color="none")
+        common.addDir(name, '', -1, common.GetIconFullPath("trump.jpg"), infos={"Title": name}, module='mako')
 
-def Music():
-    name = common.GetLabelColor(common.GetLocaleString(30614), bold=True, color="none")
-    common.addDir(name, '', 0, common.GetIconFullPath("music.png"), infos={"Title": name})
-
-def Run():
-    common.setAddonInfo(AddonName, icon)
-    common.setView('default')
-    common.setFanart()
-    url = common.args.url
-    name = common.args.name
-    mode = int(common.args.mode)
-    iconimage = common.args.iconimage
-    module = common.args.module
-    moreData = common.args.moreData
-    resKey = common.args.resKey
-    if mode == 1:
+def main():
+    params = common.get_params()
+    url = params.get("url", None)
+    name = params.get("name", None)
+    mode = int(params.get("mode", -1))
+    iconimage = params.get("iconimage", None)
+    module = params.get("module", None)
+    
+    if mode == 10:
+        GetCategoriesList()
+    elif mode == 1:
         LiveChannels()
     elif mode == 2:
         VODs()
     elif mode == 3:
         RadioChannels()
     elif mode == 4:
-        common.SearchPrograms()
-    elif mode == 10:
-        common.Favorites()
-    elif mode == 12:
-        Podcasts()
-    elif mode == 13:
-        Music()
+        common.Search()
     elif mode == 6:
         common.OpenSettings()
-    elif mode == 0:
-        if module == '':
-            common.PlayVideo(url, name, iconimage, moreData, resKey=resKey)
-        else:
-            common.ShowChannels(url, name, iconimage, module, resKey=resKey)
+    elif mode == 12:
+        common.ShowRadioPrograms()
+    elif mode == 13:
+        common.ShowPodcasts()
+    elif mode == 14:
+        common.ShowMusic()
     else:
-        xbmcplugin.endOfDirectory(common.pluginHandle, succeeded=False)
+        xbmcplugin.endOfDirectory(int(sys.argv[1]), True)
 
-Run()
+if __name__ == '__main__':
+    main()
